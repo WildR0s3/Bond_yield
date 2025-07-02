@@ -3,7 +3,7 @@
 class YearlyBonds extends Bonds implements BondInterface {
 
     protected function getYearlyBonds() {
-        $sql = "SELECT * FROM types WHERE bond_type IN ('4 - year','3 - year', 'four-year')";
+        $sql = "SELECT * FROM types WHERE bond_type IN ('4 - year', 'four-year')";
         $result = mysqli_query($this->connect(), $sql);
         $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
         return $data;
@@ -29,8 +29,19 @@ class YearlyBonds extends Bonds implements BondInterface {
         return $interest;
     }
 
-    
-   
+    public function totalDailyInterest() {
+        $totalDaily = 0;
+        $data = $this->getYearlyBonds();
+        foreach ($data as $bond) {
+            for ($i = 1; $i <= $bond['interest_periods']; $i++) {
+                if ($this->calcInterest($bond, $i) < $this->calcTotalInterest($bond, $i) && $this->calcInterest($bond, $i) != 0) {
+                    $totalDaily += round(($this->calcTotalInterest($bond, $i) / 365), 3);
+                }
+            }    
+        }   return $totalDaily;
+    }
+
+ 
     public function showBonds() {
         $data = $this->getYearlyBonds();
         $sum_total = 0;

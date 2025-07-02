@@ -12,7 +12,17 @@
     </head>
     <body>
         <div class="title-container">
-            <h1>Yield calcualtion</h1>  
+            <h1>Yield calcualtion</h1>
+            <div class="additional-data">
+                <h3>Daily interest: 
+                    <?php
+                    $daily  = (new YearlyBonds)->totalDailyInterest() + (new TenYearBonds)->calculateTotalDaily() + (new MonthlyBonds)->totalDailyInterest();
+                    echo $daily;
+                    ?>
+                </h3>
+                <h3>Monthly interest: <?php echo $daily * 30.4;?></h3>
+                <h3>Yearly interest: <?php echo $daily * 365;?></h3>
+            </div>  
         </div>
 
         <div class="body-container">

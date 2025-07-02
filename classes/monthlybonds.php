@@ -21,17 +21,30 @@ class MonthlyBonds extends Bonds implements BondInterface
     public function calcInterest($bond, $i)
     {
         $diff_days = (new DateTime($bond['purchase_date']))->diff(new DateTime(date("Y-m-d")))->days;
-        if ($diff_days - (($i * 30)) > 0) {
+        if ($diff_days - (($i * 30.417)) > 0) {
             $interest = $this->calcTotalInterest($bond, $i);
-        } elseif (($diff_days - ($i * 30)) > -30) {
-            $diff_days = $diff_days - (($i - 1) * 30);
-            $interest = (($bond['interest_' . $i] / 100) * ($diff_days / 30) * 0.81 * $bond['amount']) / 12;
+        } elseif (($diff_days - ($i * 30.417)) > -30.417) {
+            $diff_days = $diff_days - (($i - 1) * 30.417);
+            $interest = (($bond['interest_' . $i] / 100) * ($diff_days / 30.417) * 0.81 * $bond['amount']) / 12;
             $interest = round($interest, 2);
         } else {
             $interest = 0;
         }
         return $interest;
     }
+
+    public function totalDailyInterest() {
+        $totalDaily = 0;
+        $data = $this->getMonthlyBonds();
+        foreach ($data as $bond) {
+            for ($i = 1; $i <= $bond['interest_periods']; $i++) {
+                if ($this->calcInterest($bond, $i) < $this->calcTotalInterest($bond, $i) && $this->calcInterest($bond, $i) != 0) {
+                    $totalDaily += round(($this->calcTotalInterest($bond, $i) / 30), 3);
+                }
+            }    
+        }   return $totalDaily;
+    }
+
 
 
 
