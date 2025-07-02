@@ -10,7 +10,7 @@ class database {
         $this->servername = "localhost";
         $this->username = "root";
         $this->password = "";
-        $this->dbname = "bonds";
+        $this->dbname = ""; //set your databese
 
         $connection = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
         return $connection;
